@@ -65,7 +65,7 @@ export function changelog(): string {
   return `https://www.getoutline.com/changelog`;
 }
 
-export function signin(service: string = 'slack'): string {
+export function signin(service: string = 'local'): string {
   return `${process.env.URL}/auth/${service}`;
 }
 

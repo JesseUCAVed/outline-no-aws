@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import Button from './Button';
 import { signin } from '../../../shared/utils/routeHelpers';
 import Flex from '../../../shared/components/Flex';
-import Notice from '../../../shared/components/Notice';
 import GoogleLogo from '../../../shared/components/GoogleLogo';
 import SlackLogo from '../../../shared/components/SlackLogo';
 import breakpoint from 'styled-components-breakpoint';
@@ -24,13 +23,14 @@ const SigninButtons = ({
 }: Props) => {
   return (
     <Wrapper>
-      {!slackSigninEnabled &&
-        !googleSigninEnabled && (
-          <Notice>
-            Neither Slack or Google sign in is enabled. You must configure at
-            least one authentication method to sign in to Outline.
-          </Notice>
-        )}
+      <Column column>
+        <Button href={'/login'}>
+          <Spacer>Email Sign In</Spacer>
+        </Button>
+        <LastLogin>
+          {lastSignedIn === 'local' && 'You previously signed in locally'}
+        </LastLogin>
+      </Column>
       {slackSigninEnabled && (
         <Column column>
           <Button href={signin('slack')}>

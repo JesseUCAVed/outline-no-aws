@@ -13,6 +13,7 @@ import { opensearchResponse } from './utils/opensearch';
 import { NotFoundError } from './errors';
 import { Team } from './models';
 
+import Login from './pages/Login'
 import Home from './pages/Home';
 import Developers from './pages/developers';
 import Api from './pages/developers/Api';
@@ -105,12 +106,16 @@ router.get('/', async ctx => {
   return renderpage(
     ctx,
     <Home
-      notice={ctx.request.query.notice}
       lastSignedIn={lastSignedIn}
-      googleSigninEnabled={!!process.env.GOOGLE_CLIENT_ID}
-      slackSigninEnabled={!!process.env.SLACK_KEY}
+      googleSigninEnabled={false}
+      slackSigninEnabled={false}
+      guestSigninEnabled={true}
     />
   );
+});
+
+router.get('/login', ctx => {
+  return renderpage(ctx, <Login/>);
 });
 
 router.get('/robots.txt', ctx => {

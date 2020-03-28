@@ -30,6 +30,12 @@ export default function validation() {
       }
     };
 
+    ctx.assertPassword = (value = '', message) => {
+      if (validator.isEmpty(value)) {
+        throw new ValidationError(message);
+      }
+    };
+
     ctx.assertUuid = (value = '', message) => {
       if (!validator.isUUID(value)) {
         throw new ValidationError(message);
