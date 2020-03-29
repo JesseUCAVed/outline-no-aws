@@ -2,42 +2,33 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import styled from 'styled-components';
+import Submit from './components/Submit';
 import Grid from 'styled-components-grid';
-import Button from './components/Button';
-import Submit from './components/Submit'
-import AuthNotices from './components/AuthNotices';
 import Hero from './components/Hero';
 import Input from './components/Input'
 import Branding from '../../shared/components/Branding';
-import { githubUrl, signin } from '../../shared/utils/routeHelpers';
+import { githubUrl } from '../../shared/utils/routeHelpers';
 import Flex from './../../shared/components/Flex';
 import breakpoint from 'styled-components-breakpoint';
 
 type Props = {};
 
-function Login(props: Props) {
-
+function CreateAccount(props: Props) {
   return (
     <span>
       <Helmet>
-        <title>Login</title>
+        <title>Create Account</title>
       </Helmet>
       <Grid>
         <Hero id="signin">
-          <AuthNotices notice={props.notice} />
-          <h1>Login</h1>
+          <h1>Create Account</h1>
 
-          <form method="POST" action={signin('local')}>
-            <Input placeholder="email" name="email" type="text" />
+          <form method="POST" action="/auth/local.create">
+            <Input placeholder="email" name="email" type="email" />
             <Input placeholder="password" name="password" type="password" />
             <Wrapper>
               <Column column>
-                <Submit type="submit" value="Log In" />
-              </Column>
-              <Column column>
-                <Button href={'/create-account'}>
-                  <Spacer>Create Account</Spacer>
-                </Button>
+                <Submit type="submit" value="Create Account" />
               </Column>
             </Wrapper>
           </form>
@@ -74,4 +65,4 @@ const Spacer = styled.span`
   padding-left: 10px;
 `;
 
-export default Login;
+export default CreateAccount;

@@ -2,12 +2,14 @@
 import crypto from 'crypto';
 import uuid from 'uuid';
 import JWT from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import subMinutes from 'date-fns/sub_minutes';
 import { ValidationError } from '../errors';
 import { DataTypes, sequelize, encryptedFields } from '../sequelize';
 import { publicS3Endpoint, uploadToS3FromUrl } from '../utils/s3';
 import { sendEmail } from '../mailer';
 import { Star, Team, Collection, NotificationSetting, ApiKey } from '.';
+import { has } from 'mobx';
 
 const DEFAULT_AVATAR_HOST = 'https://tiley.herokuapp.com';
 
@@ -22,6 +24,7 @@ const User = sequelize.define(
     email: { type: DataTypes.STRING },
     username: { type: DataTypes.STRING },
     name: DataTypes.STRING,
+    password: { type: DataTypes.STRING, allowNull: true },
     avatarUrl: { type: DataTypes.STRING, allowNull: true },
     isAdmin: DataTypes.BOOLEAN,
     service: { type: DataTypes.STRING, allowNull: true },
@@ -123,6 +126,15 @@ User.prototype.getEmailSigninToken = function() {
   );
 };
 
+User.prototype.hashPassword = async function() {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(this.password, salt);
+};
+
+User.prototype.validPassword = async function(password) {
+  return await bcrypt.compare(password, this.password);
+}
+
 const uploadAvatar = async model => {
   const endpoint = publicS3Endpoint();
   const { avatarUrl } = model;
@@ -167,6 +179,7 @@ const removeIdentifyingInfo = async (model, options) => {
 
   model.email = null;
   model.name = 'Unknown';
+  model.password = null;
   model.avatarUrl = '';
   model.serviceId = null;
   model.username = null;
@@ -197,7 +210,12 @@ const checkLastAdmin = async model => {
 User.beforeDestroy(checkLastAdmin);
 User.beforeDestroy(removeIdentifyingInfo);
 User.beforeSave(uploadAvatar);
-User.beforeCreate(setRandomJwtSecret);
+User.beforeCreate(async (user, options) => {
+  if (user.password != null) {
+    user.hashPassword()
+  }
+  return setRandomJwtSecret(user, options)
+});
 User.afterCreate(async user => {
   const team = await Team.findByPk(user.teamId);
 

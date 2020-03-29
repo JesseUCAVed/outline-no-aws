@@ -145,6 +145,7 @@ class MainSidebar extends React.Component<Props> {
               />
               {can.invite && (
                 <SidebarLink
+                  to="#"
                   onClick={this.handleInviteModalOpen}
                   icon={<PlusIcon />}
                   label="Invite people…"

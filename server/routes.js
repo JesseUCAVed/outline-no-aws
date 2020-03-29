@@ -13,6 +13,7 @@ import { opensearchResponse } from './utils/opensearch';
 import { NotFoundError } from './errors';
 import { Team } from './models';
 
+import CreateAccount from './pages/CreateAccount'
 import Login from './pages/Login'
 import Home from './pages/Home';
 import Developers from './pages/developers';
@@ -115,7 +116,11 @@ router.get('/', async ctx => {
 });
 
 router.get('/login', ctx => {
-  return renderpage(ctx, <Login/>);
+  return renderpage(ctx, <Login />);
+});
+
+router.get('/create-account', ctx => {
+  return renderpage(ctx, <CreateAccount />);
 });
 
 router.get('/robots.txt', ctx => {
