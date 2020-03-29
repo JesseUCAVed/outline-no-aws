@@ -9,7 +9,6 @@ import { DataTypes, sequelize, encryptedFields } from '../sequelize';
 import { publicS3Endpoint, uploadToS3FromUrl } from '../utils/s3';
 import { sendEmail } from '../mailer';
 import { Star, Team, Collection, NotificationSetting, ApiKey } from '.';
-import { has } from 'mobx';
 
 const DEFAULT_AVATAR_HOST = 'https://tiley.herokuapp.com';
 
@@ -212,7 +211,7 @@ User.beforeDestroy(removeIdentifyingInfo);
 User.beforeSave(uploadAvatar);
 User.beforeCreate(async (user, options) => {
   if (user.password != null) {
-    user.hashPassword()
+    await user.hashPassword()
   }
   return setRandomJwtSecret(user, options)
 });

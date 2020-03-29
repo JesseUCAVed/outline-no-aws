@@ -107,10 +107,10 @@ router.get('/', async ctx => {
   return renderpage(
     ctx,
     <Home
+    notice={ctx.request.query.notice}
       lastSignedIn={lastSignedIn}
-      googleSigninEnabled={false}
-      slackSigninEnabled={false}
-      guestSigninEnabled={true}
+      googleSigninEnabled={!!process.env.GOOGLE_CLIENT_ID}
+      slackSigninEnabled={!!process.env.SLACK_KEY}
     />
   );
 });
